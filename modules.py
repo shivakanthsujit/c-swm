@@ -29,7 +29,7 @@ class ContrastiveSWM(nn.Module):
         self.sigma = sigma
         self.ignore_action = ignore_action
         self.copy_action = copy_action
-        
+
         self.pos_loss = 0
         self.neg_loss = 0
 
@@ -106,7 +106,7 @@ class ContrastiveSWM(nn.Module):
 
         self.pos_loss = self.energy(state, action, next_state)
         zeros = torch.zeros_like(self.pos_loss)
-        
+
         self.pos_loss = self.pos_loss.mean()
         self.neg_loss = torch.max(
             zeros, self.hinge - self.energy(
@@ -183,7 +183,7 @@ class TransitionGNN(torch.nn.Module):
 
             # Remove diagonal.
             adj_full -= torch.eye(num_objects)
-            self.edge_list = adj_full.nonzero()
+            self.edge_list = adj_full.nonzero(as_tuple=False)
 
             # Copy `batch_size` times and add offset.
             self.edge_list = self.edge_list.repeat(batch_size, 1)
@@ -246,7 +246,7 @@ class TransitionGNN(torch.nn.Module):
 
 class EncoderCNNSmall(nn.Module):
     """CNN encoder, maps observation to obj-specific feature maps."""
-    
+
     def __init__(self, input_dim, hidden_dim, num_objects, act_fn='sigmoid',
                  act_fn_hid='relu'):
         super(EncoderCNNSmall, self).__init__()
@@ -260,11 +260,11 @@ class EncoderCNNSmall(nn.Module):
     def forward(self, obs):
         h = self.act1(self.ln1(self.cnn1(obs)))
         return self.act2(self.cnn2(h))
-    
-    
+
+
 class EncoderCNNMedium(nn.Module):
     """CNN encoder, maps observation to obj-specific feature maps."""
-    
+
     def __init__(self, input_dim, hidden_dim, num_objects, act_fn='sigmoid',
                  act_fn_hid='leaky_relu'):
         super(EncoderCNNMedium, self).__init__()
@@ -286,7 +286,7 @@ class EncoderCNNMedium(nn.Module):
 
 class EncoderCNNLarge(nn.Module):
     """CNN encoder, maps observation to obj-specific feature maps."""
-    
+
     def __init__(self, input_dim, hidden_dim, num_objects, act_fn='sigmoid',
                  act_fn_hid='relu'):
         super(EncoderCNNLarge, self).__init__()
@@ -315,7 +315,7 @@ class EncoderCNNLarge(nn.Module):
 
 class EncoderMLP(nn.Module):
     """MLP encoder, maps observation to latent state."""
-    
+
     def __init__(self, input_dim, output_dim, hidden_dim, num_objects,
                  act_fn='relu'):
         super(EncoderMLP, self).__init__()
@@ -341,7 +341,7 @@ class EncoderMLP(nn.Module):
 
 class DecoderMLP(nn.Module):
     """MLP decoder, maps latent state to image."""
-    
+
     def __init__(self, input_dim, hidden_dim, num_objects, output_size,
                  act_fn='relu'):
         super(DecoderMLP, self).__init__()
@@ -372,7 +372,7 @@ class DecoderMLP(nn.Module):
 
 class DecoderCNNSmall(nn.Module):
     """CNN decoder, maps latent state to image."""
-    
+
     def __init__(self, input_dim, hidden_dim, num_objects, output_size,
                  act_fn='relu'):
         super(DecoderCNNSmall, self).__init__()
@@ -412,7 +412,7 @@ class DecoderCNNSmall(nn.Module):
 
 class DecoderCNNMedium(nn.Module):
     """CNN decoder, maps latent state to image."""
-    
+
     def __init__(self, input_dim, hidden_dim, num_objects, output_size,
                  act_fn='relu'):
         super(DecoderCNNMedium, self).__init__()

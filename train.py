@@ -6,6 +6,7 @@ import os
 import pickle
 
 import numpy as np
+from tqdm.auto import tqdm
 import logging
 
 from torch.utils import data
@@ -152,7 +153,7 @@ print('Starting model training...')
 step = 0
 best_loss = 1e9
 
-for epoch in range(1, args.epochs + 1):
+for epoch in tqdm(range(1, args.epochs + 1)):
     model.train()
     train_loss = 0
 
@@ -187,7 +188,7 @@ for epoch in range(1, args.epochs + 1):
             optimizer_dec.step()
 
         if batch_idx % args.log_interval == 0:
-            print(
+            tqdm.write(
                 'Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data_batch[0]),
                     len(train_loader.dataset),
@@ -197,7 +198,7 @@ for epoch in range(1, args.epochs + 1):
         step += 1
 
     avg_loss = train_loss / len(train_loader.dataset)
-    print('====> Epoch: {} Average loss: {:.6f}'.format(
+    tqdm.write('====> Epoch: {} Average loss: {:.6f}'.format(
         epoch, avg_loss))
 
     if avg_loss < best_loss:
